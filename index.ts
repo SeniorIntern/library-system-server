@@ -1,13 +1,8 @@
-import express from 'express';
+import express from 'express'
 
-const app = express();
-const port = 3000;
+const app = express()
 
-app.get('/', (req, res) => {
-  res.send('hey');
-});
-
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
-
+const port = 3000
+app.listen(port, async () => {
+  console.log(`listening on port: ${port}...`);
+})

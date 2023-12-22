@@ -11,11 +11,15 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@faker-js/faker": "^8.3.1",
     "@types/express": "^4.17.21",
     "@types/node": "^20.10.5",
     "express": "^4.18.2",
     "nodemon": "^3.0.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "mongoose": "^8.0.3"
   }
 }
