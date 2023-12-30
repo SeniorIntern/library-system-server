@@ -3,8 +3,16 @@ const router = express.Router()
 import { Book } from '../models/book'
 
 router.get('/', async (req, res) => {
-  const books = await Book.find().populate('category').populate('language').populate('authors')
+  const books = await Book.find()
   res.status(200).send(books)
+})
+
+router.get('/:id', async (req, res) => {
+  const book = await Book.findById(req.params.id).populate('category').populate('language').populate('authors')
+
+  if (!book) return res.status(404).send('The book with the given id was not found!')
+
+  res.status(200).send(book)
 })
 
 router.post('/', async (req, res) => {

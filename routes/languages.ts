@@ -8,11 +8,9 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-  const { name } = req.body
-  const language = await Language.create({
-    name
-  })
-  return res.status(200).send(language)
-})
+  const { language } = req.body
+  await Language.create({ language })
+  res.status(200).send(language)
+});
 
 export default router
