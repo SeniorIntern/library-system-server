@@ -1,40 +1,26 @@
-import express, { Request, Response } from 'express'
-const router = express.Router()
-import User from '../models/user'
+import express from 'express'
+import { User, validateUser } from '../models/user';
 import bcrypt from 'bcrypt'
+import _ from 'lodash'
+const router = express.Router()
 
-router.post("/", async (req: Request, res: Response) => {
-  try {
-    const { username, email, password } = req.body
+router.post("/", async (req, res) => {
+  const { success } = validateUser(req.body);
+  if (!success) return res.status(400).send('Invalid values');
 
-    //check if user already exists
-    const user = await User.findOne({ email })
+  let user = await User.findOne({ email: req.body.email });
+  if (user) return res.status(400).send("User already registered.");
 
-    if (user) {
-      return res.status(400).send({ error: "User already exists" })
-    }
+  user = new User(_.pick(req.body, ["name", "email", "password"]));
+  const salt = await bcrypt.genSalt(10);
+  user.password = await bcrypt.hash(user.password, salt);
+  await user.save();
 
-    //hash password
-    const salt = await bcrypt.genSalt(10)
-    const hashedPassword = await bcrypt.hash(password, salt)
+  // @ts-ignore
+  const token = user.generateAuthToken();
+  res
+    .header("x-auth-token", token)
+    .send(_.pick(user, ["_id", "name", "email"]));
+});
 
-    const newUser = new User({
-      username,
-      email,
-      password: hashedPassword
-    })
-
-    const savedUser = await newUser.save()
-    console.log(savedUser);
-
-    return res.send({
-      message: "User created successfully",
-      success: true,
-      savedUser
-    })
-  } catch (error: any) {
-    return res.status(500).send({ error: error.message })
-  }
-})
-
-export default router
+export default router;

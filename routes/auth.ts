@@ -1,48 +1,36 @@
-import express, { Request, Response } from 'express'
-const router = express.Router()
-import User from '../models/user'
+import express from 'express'
+import { User } from '../models/user';
 import bcrypt from 'bcrypt'
-import jwt from "jsonwebtoken";
+import { z } from 'zod'
+const router = express.Router()
 
-router.post("/", async (req: Request, res: Response) => {
-  try {
-    const { email, password } = req.body
+router.post('/', async (req, res) => {
+  const { success } = validate(req.body);
+  if (!success) return res.status(400).send('Invalid values');
 
-    //check if user exists
-    const user = await User.findOne({ email })
-    if (!user) {
-      return res.status(400).send({ error: "User does not exist" })
-    }
-    console.log("user exists");
+  let user = await User.findOne({ email: req.body.email });
+  if (!user) return res.status(400).send('Invalid email or password.');
 
-    //check if password is correct
-    /*
-    const validPassword = bcrypt.compare(password, user.password)
-    if (!validPassword) {
-      return res.status(400).send({ error: "Invalid password" })
-    }
-    console.log(user);
-    */
+  const validPassword = await bcrypt.compare(req.body.password, user.password);
+  if (!validPassword) return res.status(400).send('Invalid email or password.');
 
-    //create token data
-    const tokenData = {
-      id: user._id,
-      username: user.username,
-      email: user.email
-    }
+  //@ts-ignore
+  const token = user.generateAuthToken();
+  res.send(token);
+});
 
-    //create token
-    const token = jwt.sign(tokenData, process.env.jwtPrivateKey!, { expiresIn: "1d" })
-
-    return res.status(200).cookie("token", token, {
-      httpOnly: true,
-    }).send({
-      message: "Login successful",
-      success: true,
-    })
-  } catch (error: any) {
-    return res.status(500).send({ error: error.message })
-  }
+const schema = z.object({
+  email: z.string()
+    .min(5)
+    .max(255)
+    .email(),
+  password: z.string()
+    .min(5)
+    .max(255)
 })
 
-export default router
+function validate(req: z.infer<typeof schema>) {
+  return schema.safeParse(req);
+}
+
+export default router; 
