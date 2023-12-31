@@ -34,4 +34,9 @@ router.patch('/:id', async (req, res) => {
   return res.status(200).send(book)
 })
 
+router.delete('/:id', async (req, res) => {
+  const book = await Book.findByIdAndDelete(req.params.id)
+  res.status(200).send(book)
+})
+
 export default router
