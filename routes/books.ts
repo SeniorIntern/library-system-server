@@ -23,4 +23,15 @@ router.post('/', async (req, res) => {
   return res.status(200).send(book)
 })
 
+router.patch('/:id', async (req, res) => {
+  const { title, description, image_url, thumbnail_url, authors, category, language } = req.body
+  const book = await Book.findByIdAndUpdate(req.params.id,
+    {
+      $set: { title, description, image_url, thumbnail_url, authors, category, language },
+    },
+    { new: true }
+  )
+  return res.status(200).send(book)
+})
+
 export default router
