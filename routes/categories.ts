@@ -1,15 +1,15 @@
 import express from 'express'
 const router = express.Router()
-import { Cateogry } from '../models/category'
+import Category from '../models/category'
 
 router.get('/', async (req, res) => {
-  const categories = await Cateogry.find()
+  const categories = await Category.find()
   res.status(200).send(categories)
 })
 
 router.post('/', async (req, res) => {
   const { name, description } = req.body
-  const categories = await Cateogry.create({
+  const categories = await Category.create({
     name, description
   })
   res.status(200).send(categories)
