@@ -32,12 +32,6 @@ const rentalSchema = new mongoose.Schema({
         trim: true,
         minlength: 5,
         maxlength: 255
-      },
-      dailyRentalRate: {
-        type: Number,
-        required: true,
-        min: 0,
-        max: 255
       }
     }),
     required: true
@@ -46,13 +40,6 @@ const rentalSchema = new mongoose.Schema({
     type: Date,
     required: true,
     default: Date.now
-  },
-  dateReturned: {
-    type: Date
-  },
-  rentalFee: {
-    type: Number,
-    min: 0
   }
 });
 
