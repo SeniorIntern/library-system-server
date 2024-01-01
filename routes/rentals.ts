@@ -34,4 +34,9 @@ router.post("/", async (req, res) => {
   res.send(rental);
 });
 
+router.delete('/:id', async (req, res) => {
+  const rental = await Rental.findByIdAndDelete(req.params.id)
+  res.status(200).send(rental)
+})
+
 export default router
