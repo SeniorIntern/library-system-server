@@ -1,6 +1,6 @@
 import express from 'express'
+import Book from '../models/book'
 const router = express.Router()
-import { Book } from '../models/book'
 
 router.get('/', async (req, res) => {
   const books = await Book.find()
@@ -8,26 +8,29 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
-  const book = await Book.findById(req.params.id).populate('category').populate('language').populate('authors')
-
+  const book = await Book.findById(req.params.id).populate('category').populate('language')
   if (!book) return res.status(404).send('The book with the given id was not found!')
 
   res.status(200).send(book)
 })
 
 router.post('/', async (req, res) => {
-  const { title, description, image_url, thumbnail_url, authors, category, language } = req.body
+  const {
+    title, description, image_url, thumbnail_url, author, category, language
+  } = req.body
   const book = await Book.create({
-    title, description, image_url, thumbnail_url, authors, category, language
+    title, description, image_url, thumbnail_url, author, category, language
   })
   return res.status(200).send(book)
 })
 
 router.patch('/:id', async (req, res) => {
-  const { title, description, image_url, thumbnail_url, authors, category, language } = req.body
+  const {
+    title, description, image_url, thumbnail_url, author, category, language
+  } = req.body
   const book = await Book.findByIdAndUpdate(req.params.id,
     {
-      $set: { title, description, image_url, thumbnail_url, authors, category, language },
+      $set: { title, description, image_url, thumbnail_url, author, category, language }
     },
     { new: true }
   )
