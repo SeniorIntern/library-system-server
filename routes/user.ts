@@ -4,7 +4,12 @@ import bcrypt from 'bcrypt'
 import _ from 'lodash'
 const router = express.Router()
 
-router.post("/", async (req, res) => {
+router.get('/', async (req, res) => {
+  const users = await User.find().select(['-password'])
+  res.status(200).send(users)
+})
+
+router.post('/', async (req, res) => {
   const { success } = validateUser(req.body);
   if (!success) return res.status(400).send('Invalid values');
 

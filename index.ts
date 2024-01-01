@@ -7,6 +7,7 @@ import authors from './routes/authors'
 import categories from './routes/categories'
 import books from './routes/books'
 import rentals from './routes/rentals'
+import returns from './routes/returns'
 import cors from 'cors'
 import 'dotenv/config'
 
@@ -22,6 +23,7 @@ app.use('/api/categories', categories)
 app.use('/api/languages', languages)
 app.use('/api/books', books)
 app.use('/api/rentals', rentals)
+app.use('/api/returns', returns)
 
 mongoose.connect(process.env.URI!)
   .then(() => console.log('Connected!'))

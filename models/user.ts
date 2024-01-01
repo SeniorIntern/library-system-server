@@ -44,7 +44,7 @@ const User = mongoose.model("User", userSchema);
 
 const schema = z.object({
   name: z.string()
-    .min(2)
+    .min(3)
     .max(50),
   email: z.string()
     .min(5)
