@@ -17,18 +17,22 @@ const bookSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  authors: [{
+  author: {
     type: mongoose.Schema.Types.ObjectId,
+    required: true,
     ref: 'Author'
-  }],
+  },
   category: {
     type: mongoose.Schema.Types.ObjectId,
+    required: true,
     ref: 'Category'
   },
   language: {
     type: mongoose.Schema.Types.ObjectId,
+    required: true,
     ref: 'Language'
   }
 })
 
-export const Book = mongoose.model('Book', bookSchema)
+const Book = mongoose.model('Book', bookSchema)
+export default Book
