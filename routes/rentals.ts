@@ -3,6 +3,16 @@ import Rental from "../models/rental";
 import Book from "../models/book";
 const router = express.Router();
 
+router.get("/", async (req, res) => {
+  const rentals = await Rental.find().sort("-dateOut").populate('customer').populate('book');
+  res.send(rentals);
+});
+
+router.get("/:id", async (req, res) => {
+  const rentals = await Rental.findById(req.params.id).populate('customer').populate('book');
+  res.send(rentals);
+});
+
 router.post("/", async (req, res) => {
   const book = await Book.findById(req.body.bookId);
   if (!book) return res.status(400).send('Book not found!')
