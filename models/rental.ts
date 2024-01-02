@@ -40,6 +40,10 @@ const rentalSchema = new mongoose.Schema({
     type: Date,
     required: true,
     default: Date.now
+  },
+  hasReturned: {
+    type: Boolean,
+    default: false
   }
 });
 
