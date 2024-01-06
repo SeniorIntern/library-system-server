@@ -17,10 +17,10 @@ router.post("/", async (req, res) => {
   const book = await Book.findById(req.body.bookId);
   if (!book) return res.status(400).send('Book not found!')
 
-  const { name, address, email } = req.body
+  const { username, address, email } = req.body
   const rental = new Rental({
     customer: {
-      name: name,
+      name: username,
       address: address,
       email: email,
     },
